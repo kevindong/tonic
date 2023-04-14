@@ -28,7 +28,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         let default_small_response = default_client.say_hello_small(get_request()).await;
         println!("Default client on SayHelloSmall={:?}", default_small_response);
         let default_large_response = default_client.say_hello_large(get_request()).await;
-        println!("Default client on SayHelloLarge={:?}", default_large_response);
+        println!("Default client on SayHelloLarge.is_ok()={}, SayHelloLarge={:?}", default_large_response.is_ok(), default_large_response);
     }
 
     // Doing the same, but on a client that specifies max_decoding_size

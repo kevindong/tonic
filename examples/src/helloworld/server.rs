@@ -1,5 +1,3 @@
-use rand::distributions::Alphanumeric;
-use rand::Rng;
 use tonic::{transport::Server, Request, Response, Status};
 
 use hello_world::greeter_server::{Greeter, GreeterServer};
@@ -13,8 +11,8 @@ pub mod hello_world {
 pub struct MyGreeter {}
 
 fn get_large_string() -> String {
-    // 10 megabytes
-    rand::thread_rng().sample_iter(&Alphanumeric).take(100_000_000).map(char::from).collect()
+    // ~100 megabytes
+    "a".repeat(100_000_000)
 }
 
 #[tonic::async_trait]
@@ -38,7 +36,7 @@ impl Greeter for MyGreeter {
         println!("Got a normal request on SayHelloLarge from {:?}", request.remote_addr());
 
         let reply = hello_world::HelloReply {
-            message: format!("Very large response: {}", get_large_string()),
+            message: get_large_string(),
         };
         Ok(Response::new(reply))
     }
