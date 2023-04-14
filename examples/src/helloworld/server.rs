@@ -1,3 +1,5 @@
+use rand::distributions::Alphanumeric;
+use rand::Rng;
 use tonic::{transport::Server, Request, Response, Status};
 
 use hello_world::greeter_server::{Greeter, GreeterServer};
@@ -10,16 +12,33 @@ pub mod hello_world {
 #[derive(Default)]
 pub struct MyGreeter {}
 
+fn get_large_string() -> String {
+    // 10 megabytes
+    rand::thread_rng().sample_iter(&Alphanumeric).take(10_000_000).map(char::from).collect()
+}
+
 #[tonic::async_trait]
 impl Greeter for MyGreeter {
-    async fn say_hello(
+    async fn say_hello_small(
         &self,
         request: Request<HelloRequest>,
     ) -> Result<Response<HelloReply>, Status> {
-        println!("Got a request from {:?}", request.remote_addr());
+        println!("Got a request on SayHelloSmall from {:?}", request.remote_addr());
 
         let reply = hello_world::HelloReply {
-            message: format!("Hello {}!", request.into_inner().name),
+            message: format!("Normal Hello {}!", request.into_inner().name),
+        };
+        Ok(Response::new(reply))
+    }
+
+    async fn say_hello_large(
+        &self,
+        request: Request<HelloRequest>,
+    ) -> Result<Response<HelloReply>, Status> {
+        println!("Got a normal request on SayHelloLarge from {:?}", request.remote_addr());
+
+        let reply = hello_world::HelloReply {
+            message: format!("Very large response: {}", get_large_string()),
         };
         Ok(Response::new(reply))
     }
@@ -27,7 +46,7 @@ impl Greeter for MyGreeter {
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let addr = "[::1]:50051".parse().unwrap();
+    let addr = "0.0.0.0:50051".parse().unwrap();
     let greeter = MyGreeter::default();
 
     println!("GreeterServer listening on {}", addr);

@@ -281,6 +281,7 @@ default = ["full"]
 
 [dependencies]
 # Common dependencies
+anyhow = "1.0"
 tokio = { version = "1.0", features = ["rt-multi-thread", "macros"] }
 prost = "0.11"
 tonic = { path = "../tonic" }
