@@ -1,7 +1,6 @@
 use hello_world::greeter_client::GreeterClient;
 use hello_world::HelloRequest;
 use tonic::transport::Channel;
-use anyhow::Result;
 
 pub mod hello_world {
     tonic::include_proto!("helloworld");

@@ -14,7 +14,7 @@ pub struct MyGreeter {}
 
 fn get_large_string() -> String {
     // 10 megabytes
-    rand::thread_rng().sample_iter(&Alphanumeric).take(10_000_000).map(char::from).collect()
+    rand::thread_rng().sample_iter(&Alphanumeric).take(100_000_000).map(char::from).collect()
 }
 
 #[tonic::async_trait]
